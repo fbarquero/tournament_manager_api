@@ -11,7 +11,7 @@
 
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
-    db = DAL('sqlite://storage.sqlite',pool_size=1,check_reserved=['all'])
+    db = DAL('mysql://root:26213832fg@192.168.1.5/tournament_manager_db',pool_size=1, migrate = True, check_reserved=['mysql'])
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
     db = DAL('google:datastore')
@@ -82,3 +82,28 @@ use_janrain(auth, filename='private/janrain.key')
 
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
+
+db.define_table('tournament',
+                Field('name', 'string'))
+
+db.define_table('belt',
+                Field('description', 'string'))
+
+db.define_table('bracket',
+                Field('json', 'json'))
+
+db.define_table('academy',
+                Field('name', 'string'))
+
+db.define_table('fighter',
+                Field('name', 'string'),
+                Field('gender', 'string'),
+                Field('weight', 'decimal(5,2)'),
+                Field('born_date', 'date'),
+                Field('elite', 'integer'),
+                Field('belt_id','reference belt'),
+                Field('academy_id', 'reference academy'))
+
+db.define_table('tournament_fighter',
+                Field('tournament_id', 'reference tournament'),
+                Field('fighter_id', 'reference fighter'))
