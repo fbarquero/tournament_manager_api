@@ -11,12 +11,19 @@
 <script type="text/javascript">
     $(document).ready(function(){
         //var json = $.toJSON({ colors : ['White', 'Yellow', 'Green', 'Blue', 'Red', 'Black'] })
-        var myJsonString = JSON.stringify({ content : [{'description' : 'red_1'}, {'description' : 'black_1'}] });
+        var myJsonString = JSON.stringify({ content : [{'description' : 'red_7'}, {'description' : 'black_7'}] });
         $.ajax({
             type: "POST",
-            url: "http://localhost:8200/tournament_manager_api/tournament_manager_api/api/belt.json",
+            url: "http://localhost:8000/tournament_manager_api/tournament_manager_api/api/belt.json",
             contentType: "application/json",
-            data: myJsonString
+            data: myJsonString,
+            success: function(data){
+                console.log(data);
+
+            },
+            error: function(error){
+                console.log(error.responseText);
+            }
         });
     });
 </script>

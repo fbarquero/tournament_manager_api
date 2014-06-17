@@ -4,6 +4,7 @@ __author__ = 'Mordigan'
 import random
 import math
 import json
+import sys
 from gluon.debug import qdb_debugger
 
 def call():
@@ -16,11 +17,10 @@ def call():
     return service()
 
 @request.restful()
-def api():
+def belt():
     response.view = 'generic.json'
     def GET(*args,**vars):
         patterns = [
-            "/person[fighter]",
             "/color[belt]"
         ]
         parser = db.parse_as_rest(patterns,args,vars)
@@ -28,29 +28,22 @@ def api():
             return dict(content=parser.response)
         else:
             raise HTTP(parser.status,parser.error)
-    def POST(table_name, **vars):
-        #data = get_json_html_verb()
-        #try:
-        if table_name == 'belt':
-            #for belt_color in data['colors']:
-            return db.belt.bulk_insert(vars['content'])
-            
+
+    def POST(**vars):
+        try:
+             return dict(message = db.belt.bulk_insert(vars['content']))
+        except:
+            raise HTTP (400, "Unexpected error: %s" % sys.exc_info()[0], message = sys.exc_info()[0])
             #db.commit()
         #except:
             #db.rollback()
     def PUT(**vars):
-        data = get_json_html_verb()
         try:
             db(db.belt.id == 7).validate_and_update(description = 'whiteUpdated')
             db.commit()
         except:
             db.rollback()
     return locals()
-
-def get_json_html_verb():
-   data = request.body.read()
-   json_var = json.loads(data)
-   return json_var
 
 def single_elimination_bracket_generation(players):
     match_maker(shuffle_players(players))
@@ -126,27 +119,6 @@ def match_maker(shuffled_players):
     print "Matches dict:"
     print matches
     return matches
-
-def generate_next_rounds(number_of_players, bracket, byed_players):
-    count = 0
-    matches = []
-    if len(byed_players) == 0:
-        rounds = get_exponent_base_two(number_of_players)
-        matches_next_round = number_of_players/4
-        while rounds > 1:
-            while matches_next_round > count:
-                matches.append([None]*2)
-                count += 1
-            matches_next_round /= 2
-            bracket.append(matches)
-            matches = []
-            rounds -= 1
-            count = 0
-    else:
-        #TODO work on generate next rounds for byes
-
-        print ""
-    return bracket
 
 def is_power_of_two(number):
     if number == 0:
