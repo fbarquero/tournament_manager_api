@@ -16,22 +16,28 @@ def call():
     return service()
 
 @request.restful()
-def belt():
+def api():
     response.view = 'generic.json'
-    def GET(parameter):
-        if parameter == 'ALL':
-            return dict(tournament = db.belt.ALL)
+    def GET(*args,**vars):
+        patterns = [
+            "/person[fighter]",
+            "/color[belt]"
+        ]
+        parser = db.parse_as_rest(patterns,args,vars)
+        if parser.status == 200:
+            return dict(content=parser.response)
         else:
-            return dict(tournament = db.belt(parameter))
-    def POST(**vars):
-        data = get_json_html_verb()
-        try:
-            for belt_color in data['colors']:
-                db.belt.validate_and_insert(description = belt_color)
-            db.commit()
-        except:
-            db.rollback()
-
+            raise HTTP(parser.status,parser.error)
+    def POST(table_name, **vars):
+        #data = get_json_html_verb()
+        #try:
+        if table_name == 'belt':
+            #for belt_color in data['colors']:
+            return db.belt.bulk_insert(vars['content'])
+            
+            #db.commit()
+        #except:
+            #db.rollback()
     def PUT(**vars):
         data = get_json_html_verb()
         try:
