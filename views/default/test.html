@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="../static/js/jquery-2.1.1.min.js"></script>
+    <title></title>
+</head>
+<body>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        //var json = $.toJSON({ colors : ['White', 'Yellow', 'Green', 'Blue', 'Red', 'Black'] })
+        var myJsonString = JSON.stringify({ colors : ['White', 'Yellow', 'Green', 'Blue', 'Red', 'Black'] });
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8000/tournament_manager_api/tournament_manager_api/belt",
+            contentType: "application/json",
+            data: myJsonString
+        });
+    });
+</script>
+</body>
+</html>
