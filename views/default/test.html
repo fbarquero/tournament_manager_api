@@ -11,10 +11,10 @@
 <script type="text/javascript">
     $(document).ready(function(){
         //var json = $.toJSON({ colors : ['White', 'Yellow', 'Green', 'Blue', 'Red', 'Black'] })
-        var myJsonString = JSON.stringify({ content : [{'description' : 'red_7'}, {'description' : 'black_7'}] });
+        var myJsonString = JSON.stringify({ content : [{'id': 19, 'description' : 'red_belt_after_update'}, {'id':20, 'description' : 'black_belt_after_update'}] });
         $.ajax({
-            type: "POST",
-            url: "http://localhost:8000/tournament_manager_api/tournament_manager_api/api/belt.json",
+            type: "PUT",
+            url: "http://localhost:8000/tournament_manager_api/tkd_tournament_api/belt_info/",
             contentType: "application/json",
             data: myJsonString,
             success: function(data){
