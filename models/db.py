@@ -11,7 +11,7 @@
 
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
-    db = DAL('mysql://root:26213832fg@192.168.1.3/tournament_manager_db',pool_size=1, migrate = False, migrate_enabled = False, check_reserved = ['mysql'])
+    db = DAL('mysql://root:26213832fg@localhost/tournament_manager_db',pool_size=1, migrate = False, migrate_enabled = False, check_reserved = ['mysql'])
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
     db = DAL('google:datastore')
