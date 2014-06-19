@@ -11,7 +11,8 @@
 
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
-    db = DAL('mysql://root:26213832fg@192.168.1.3/tournament_manager_db',pool_size=1, migrate = False, migrate_enabled = False, check_reserved = ['mysql'])
+    #db = DAL('mysql://root:26213832fg@192.168.1.3/tournament_manager_db',pool_size=1, migrate = False, migrate_enabled = False, check_reserved = ['mysql'])
+    db = DAL('mysql://root:26213832fg@localhost/tournament_manager_db',pool_size=1, migrate = False, migrate_enabled = False, check_reserved = ['mysql'])
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
     db = DAL('google:datastore')
@@ -90,7 +91,12 @@ db.define_table('belt',
                 Field('description', 'string'))
 
 db.define_table('bracket',
-                Field('json', 'json'))
+                Field('json_string', 'text'),
+                Field('tournament_id', 'reference tournament'),
+                Field('weight_category_id','reference weight_category'),
+                Field('age_category_id', 'reference age_category'),
+                Field('belt_id', 'reference belt'),
+                Field('gender', 'string'))
 
 db.define_table('academy',
                 Field('name', 'string'))
@@ -109,3 +115,9 @@ db.define_table('fighter',
 db.define_table('tournament_fighter',
                 Field('tournament_tournament_id', 'reference tournament'),
                 Field('fighter_fighter_id', 'reference fighter'))
+
+db.define_table('weight_category',
+                Field('name', 'string'))
+
+db.define_table('age_category',
+                Field('name', 'string'))

@@ -2,7 +2,7 @@
 # try something like
 __author__ = 'Mordigan'
 import sys
-from gluon.debug import qdb_debugger
+import utils
 
 def call():
     """
@@ -72,7 +72,7 @@ def belt_info():
         patterns = [
             "/colors[belt]",
             "/colors[belt]/:field",
-            "/color/{belt.description}/:field"
+            "/color/{belt.id}/:field"
         ]
         parser = db.parse_as_rest(patterns,args,vars)
         if parser.status == 200:
@@ -106,7 +106,7 @@ def belt_info():
     return locals()
 
 @request.restful()
-def weight_category_info():
+def weight_division_info():
     """
     Return, add, update, delete information regarding Taekwondo belts,
     using GET, POST, PUT, DELETE verbs
@@ -114,9 +114,9 @@ def weight_category_info():
     response.view = 'generic.json'
     def GET(*args,**vars):
         patterns = [
-            "/weight[weight_category]",
-            "/weight[weight_category]/:field",
-            "/weight/{weight_category.id}/:field"
+            "/weight_division[weight_category]",
+            "/weight_division[weight_category]/:field",
+            "/weight_division/{weight_category.id}/:field"
         ]
         parser = db.parse_as_rest(patterns,args,vars)
         if parser.status == 200:
@@ -134,7 +134,7 @@ def weight_category_info():
     def PUT(**vars):
         try:
             for row in vars['content']:
-                db(db.belt.id == row['id']).validate_and_update(description = row['description'])
+                db(db.weight_category.id == row['id']).validate_and_update(description = row['description'])
             db.commit()
         except:
             db.rollback()
@@ -142,7 +142,7 @@ def weight_category_info():
     def DELETE(**vars):
         try:
             for row in vars:
-                db(db.belt.id == row['id']).delete()
+                db(db.weight_category.id == row['id']).delete()
             db.commit()
         except:
             db.rollback()
@@ -150,7 +150,7 @@ def weight_category_info():
     return locals()
 
 @request.restful()
-def age_cat_info():
+def age_division_info():
     """
     Return, add, update, delete information regarding Taekwondo belts,
     using GET, POST, PUT, DELETE verbs
@@ -158,9 +158,9 @@ def age_cat_info():
     response.view = 'generic.json'
     def GET(*args,**vars):
         patterns = [
-            "/colors[belt]",
-            "/colors[belt]/:field",
-            "/color/{belt.description}/:field"
+            "/age_division[age_category]",
+            "/age_division[age_category]/:field",
+            "/age_division/{age_category.id}/:field"
         ]
         parser = db.parse_as_rest(patterns,args,vars)
         if parser.status == 200:
@@ -169,7 +169,7 @@ def age_cat_info():
             raise HTTP(parser.status,parser.error)
     def POST(**vars):
         try:
-             var = dict(message = db.belt.bulk_insert(vars['content']))
+             var = dict(message = db.age_category.bulk_insert(vars['content']))
              db.commit()
              return var
         except:
@@ -178,7 +178,7 @@ def age_cat_info():
     def PUT(**vars):
         try:
             for row in vars['content']:
-                db(db.belt.id == row['id']).validate_and_update(description = row['description'])
+                db(db.age_category.id == row['id']).validate_and_update(description = row['description'])
             db.commit()
         except:
             db.rollback()
@@ -186,7 +186,110 @@ def age_cat_info():
     def DELETE(**vars):
         try:
             for row in vars:
-                db(db.belt.id == row['id']).delete()
+                db(db.age_category.id == row['id']).delete()
+            db.commit()
+        except:
+            db.rollback()
+            raise HTTP (400, "Unexpected error: %s" % sys.exc_info()[0], )
+    return locals()
+
+@request.restful()
+def tournament_info():
+    """
+    Return, add, update, delete information regarding Taekwondo belts,
+    using GET, POST, PUT, DELETE verbs
+    """
+    response.view = 'generic.json'
+    def GET(*args,**vars):
+        patterns = [
+            "/info[tournament]",
+            "/info[tournament]/:field",
+            "/info/{tournament.id}/:field",
+            "/info/{tournament.name}/:field"
+        ]
+        parser = db.parse_as_rest(patterns,args,vars)
+        if parser.status == 200:
+            return dict(content=parser.response)
+        else:
+            raise HTTP(parser.status,parser.error)
+    def POST(**vars):
+        try:
+             var = dict(message = db.tournament.bulk_insert(vars['content']))
+             db.commit()
+             return var
+        except:
+            db.rollback()
+            raise HTTP (400, "Unexpected error: %s" % sys.exc_info()[0])
+    def PUT(**vars):
+        try:
+            for row in vars['content']:
+                db(db.tournament.id == row['id']).validate_and_update(description = row['description'])
+            db.commit()
+        except:
+            db.rollback()
+            raise HTTP (400, "Unexpected error: %s" % sys.exc_info()[0])
+    def DELETE(**vars):
+        try:
+            for row in vars:
+                db(db.tournament.id == row['id']).delete()
+            db.commit()
+        except:
+            db.rollback()
+            raise HTTP (400, "Unexpected error: %s" % sys.exc_info()[0], )
+    return locals()
+
+
+@request.restful()
+def bracket():
+    """
+    Return, add, update, delete information regarding Taekwondo belts,
+    using GET, POST, PUT, DELETE verbs
+    """
+    response.view = 'generic.json'
+    def GET(*args,**vars):
+        patterns = [
+            "/bracket_info[bracket]",
+            "/bracket_info[bracket]/{bracket.weight_category_id}/{bracket.age_category_id}/{bracket.gender}/{bracket.belt_id}/{bracket.tournament_id}/:field"
+            #"/bracket_info/{bracket.id}/:field"
+        ]
+        parser = db.parse_as_rest(patterns,args,vars)
+        if parser.status == 200:
+            return dict(bracket = parser.response)
+        else:
+            if parser.error == 'no record found' and len(args) == 7:
+                content = db((db.fighter.weight_category_id == args[1])&
+                                         (db.fighter.age_category_id == args[2])&
+                                         (db.fighter.gender == args[3]) &
+                                         (db.fighter.belt_belt_id == args[4]) &
+                                         (db.fighter.id == db.tournament_fighter.fighter_fighter_id) &
+                                         (db.tournament_fighter.tournament_tournament_id == db.tournament.id) &
+                                         (db.tournament.id == args[5])).select()
+                if len(content) == 0:
+                    raise HTTP(parser.status,parser.error)
+                else:
+                    return dict(bracket = utils.single_elimination_bracket_generation(content))
+            else:
+                raise HTTP(parser.status,parser.error)
+    def POST(**vars):
+        try:
+             var = dict(message = db.tournament.bulk_insert(vars['content']))
+             db.commit()
+             return var
+        except:
+            db.rollback()
+            raise HTTP (400, "Unexpected error: %s" % sys.exc_info()[0])
+    def PUT(**vars):
+        try:
+            for row in vars['content']:
+                db(db.tournament.id == row['id']).validate_and_update(description = row['description'])
+            db.commit()
+        except:
+            db.rollback()
+            raise HTTP (400, "Unexpected error: %s" % sys.exc_info()[0])
+    def DELETE(**vars):
+        try:
+            for row in vars:
+                db(db.tournament.id == row['id']).delete()
             db.commit()
         except:
             db.rollback()
