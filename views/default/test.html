@@ -11,10 +11,13 @@
 <script type="text/javascript">
     $(document).ready(function(){
         //var json = $.toJSON({ colors : ['White', 'Yellow', 'Green', 'Blue', 'Red', 'Black'] })
-        var myJsonString = JSON.stringify({ content : [{'id': 19, 'description' : 'red_belt_after_update'}, {'id':20, 'description' : 'black_belt_after_update'}] });
+        //var myJsonString = JSON.stringify({ content : [{'id': 19, 'description' : 'red_belt_after_update'}, {'id':20, 'description' : 'black_belt_after_update'}] });
+        var myJsonString = JSON.stringify({ athlete : [{'name' : 'Francisco Barquero Pa', 'gender' : 'M', 'weight': 64.9,'born_date' : '06-14-2014' , 'elite': 0, 'belt_belt_id' : 2, 'academy_academy_id' : 1, 'weight_category_id': 1, 'age_category_id':1},
+                                                       {'name' : 'Francisco Barquero Pan', 'gender' : 'M', 'weight': 64.9,'born_date' : '06-14-2014' , 'elite': 0, 'belt_belt_id' : 2, 'academy_academy_id' : 1, 'weight_category_id': 1, 'age_category_id':1},
+                                                       {'name' : 'Francisco Barquero Pani', 'gender' : 'M', 'weight': 64.9,'born_date' : '06-14-2014' , 'elite': 0, 'belt_belt_id' : 2, 'academy_academy_id' : 1, 'weight_category_id': 1, 'age_category_id':1}], tournament: {number: 1}});
         $.ajax({
-            type: "PUT",
-            url: "http://localhost:8000/tournament_manager_api/tkd_tournament_api/belt_info/",
+            type: "POST",
+            url: "http://localhost:8200/tournament_manager_api/tkd_tournament_api/athlete.json",
             contentType: "application/json",
             data: myJsonString,
             success: function(data){
