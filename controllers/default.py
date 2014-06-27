@@ -11,7 +11,7 @@
 
 
 def index():
-    redirect('http://www.web2py.com')
+    redirect('../static/index.html')
 
 
 def user():
