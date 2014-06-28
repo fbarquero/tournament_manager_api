@@ -20,6 +20,15 @@ def athlete():
     Return, add, update, delete information regarding Athletes,
     using GET, POST, PUT, DELETE verbs
     """
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    #response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    #response.headers["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"
+    #if request.env.request_method == 'OPTIONS':
+        #if request.env.http_access_control_request_method:
+           # response.headers['Access-Control-Allow-Methods'] = request.env.http_access_control_request_method
+        #if request.env.http_access_control_request_headers:
+         #   response.headers['Access-Control-Allow-Headers'] = request.env.http_access_control_request_headers
+    #response.headers["Allow"] = "GET, POST, PUT, DELETE"
     response.view = 'generic.json'
     def GET(*args,**vars):
         patterns = [

@@ -11,7 +11,7 @@
 
 
 def index():
-    redirect('../static/index.html')
+    redirect('../static/tournament_manager_app/build/index.html')
 
 
 def user():

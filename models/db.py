@@ -107,8 +107,8 @@ db.define_table('fighter',
                 Field('weight', 'decimal(5,2)'),
                 Field('born_date', 'date'),
                 Field('elite', 'integer'),
-                Field('belt_belt_id','reference belt'),
-                Field('academy_academy_id', 'reference academy'),
+                Field('belt_id','reference belt'),
+                Field('academy_id', 'reference academy'),
                 Field('weight_category_id', 'reference weight_category'),
                 Field('age_category_id', 'reference age_category'))
 
