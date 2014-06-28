@@ -43,6 +43,7 @@ def athlete():
             raise HTTP(parser.status,parser.error)
     def POST(**vars):
         try:
+             utils.format_fighers_data(vars['athlete'], db().select(db.belt.ALL), db().select(db.weight_category.ALL), db().select(db.age_category.ALL))
              ids = dict(values = db.fighter.bulk_insert(vars['athlete']))
              for fighter in ids['values']:
                  db.tournament_fighter.insert(tournament_tournament_id = vars['tournament']['number'], fighter_fighter_id = fighter)
